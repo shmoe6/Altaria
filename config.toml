@@ -1,0 +1,20 @@
+
+[rift]
+
+	[rift.rift]
+		mushroomtimer = false
+		mushroom_timer = false
+
+	[rift.dreadfarm]
+		mushroom_timer = false
+
+[misc]
+
+	[misc.]
+
+		[misc..players]
+			display_elite_500 = true
+
+		[misc..items]
+			gyro_overlay = false
+
