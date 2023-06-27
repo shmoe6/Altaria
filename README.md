@@ -1,2 +1,2 @@
 # Altaria
- Hypixel Skyblock QOL ChatTrggers Module
+ Hypixel Skyblock QOL ChatTriggers Module
