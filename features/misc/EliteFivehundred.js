@@ -1,10 +1,12 @@
 import FeatureBase from "../../FeatureBase"
 import config from "../../config"
+import { getColors } from "../../utils/utils"
 
 import request from "../../../requestV2"
 import Promise from "../../../PromiseV2"
 
 export default new class EliteFivehundred extends FeatureBase {
+
     constructor() {
         super()
 
@@ -39,7 +41,7 @@ export default new class EliteFivehundred extends FeatureBase {
                 })
             }).catch((error) => console.log(error))
             //this.t = false            
-        }).setDelay(60), null, [
+        }).setDelay(10), null, [
             register("chat", (level, typeOfChat, hypixelRank, username, ironman, playerMessage, event) => {
                 // link check or soopy item thing check
                 this.onward = true
@@ -59,8 +61,7 @@ export default new class EliteFivehundred extends FeatureBase {
                 cancel(event)
 
                 //if (this.topPlayers.includes(this.playerData)) messagePrefix = message.slice(0, message.indexOf(":")) + ` &6★&r&f: `
-
-                messagePrefix = message.slice(0, message.indexOf(":")) + ` &6&l✦&r&f `
+                messagePrefix = message.slice(0, message.indexOf(":")) + ` ${getColors(data.indexOf(username))}★&r&f: `
             
                 newMessage.addTextComponent(messagePrefix)
             

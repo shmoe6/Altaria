@@ -83,3 +83,9 @@ export const getLookingAt = (useLastPacketPos=true, distance=26) => {
     const endPos = lookVec.getComponents().map((v, i) => v + startPos[i])
     return traverseVoxels(startPos, endPos, true, true, true, false)
 }
+export const getColors = (index) => {
+    if(index <= 5) return "&b"
+    else if(index > 5 && index <= 10) return "&6"
+    else if(index > 10 && index <= 15) return "&e"
+    else if(index > 15) return "&7"
+  }

@@ -19,19 +19,17 @@ export default class FeatureBase {
             if(!World.isLoaded()) return
             
             const registeredEvents = Object.keys(this.events)
-            if (inRift) this.currentWorld = Scoreboard?.getLines()?.find(f => f.getName().removeFormatting().match(/ ф (.+)/))?.getName()?.removeFormatting()?.replace(/[^\u0000-\u007F]/g, "")
-            else this.currentWorld = Scoreboard?.getLines()?.find(f => f.getName().removeFormatting().match(/ ⏣ (.+)/))?.getName()?.removeFormatting()?.replace(/[^\u0000-\u007F]/g, "")
-
-            if(!this.currentWorld || this.currentWorld === null) return
+            if (inRift) this?.currentWorld = Scoreboard?.getLines()?.find(f => f.getName().removeFormatting().match(/ ф (.+)/))?.getName()?.removeFormatting()?.replace(/[^\u0000-\u007F]/g, "")
+            else this?.currentWorld = Scoreboard?.getLines()?.find(f => f.getName().removeFormatting().match(/ ⏣ (.+)/))?.getName()?.removeFormatting()?.replace(/[^\u0000-\u007F]/g, "")
 
             registeredEvents.forEach(values => {
                 const bool = config[values]
-
-                if(
-                    bool &&
-                    (this.events[values].requiredWorld === null || this.currentWorld.removeFormatting().includes(this.events[values].requiredWorld)) &&
-                    inRift()
-                    ){
+                if(!this.currentWorld) {
+                    this.events[values].event.unregister()
+                    this.events[values].sideEvents.forEach(events => events.unregister())
+                    return
+                }
+                else if(bool && (this.events[values].requiredWorld === null || this.currentWorld.removeFormatting().includes(this.events[values].requiredWorld))){
                     this.events[values].event.register()
                     this.events[values].sideEvents.forEach(events => events.register())
                 } else {
