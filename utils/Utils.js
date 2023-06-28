@@ -84,8 +84,8 @@ export const getLookingAt = (useLastPacketPos=true, distance=26) => {
     return traverseVoxels(startPos, endPos, true, true, true, false)
 }
 export const getColors = (index) => {
-    if(index <= 5) return "&b"
-    else if(index > 5 && index <= 10) return "&6"
-    else if(index > 10 && index <= 15) return "&e"
+    if(index <= 5) return "&b&l"
+    else if(index > 5 && index <= 10) return "&6&l"
+    else if(index > 10 && index <= 15) return "&e&l"
     else if(index > 15) return "&7"
-  }
+}

@@ -12,8 +12,7 @@ export default new class EliteFivehundred extends FeatureBase {
 
         this.configName = "EliteFivehundredSetting"
         this.requiredWorld = null
-        //this.topPlayers = null
-        //this.t = true
+        this.alreadyChecking = false
 
         this.data = []
         this.newMessage = null
@@ -23,8 +22,7 @@ export default new class EliteFivehundred extends FeatureBase {
         this.onward = true
 
         this.addEvent(this.configName, register("step", () => {
-            //if (!this.t) return
-            //this.topPlayers = null
+            if(this.alreadyChecking) return
 
             Promise.all([
                 request({url: "https://soopy.dev/api/v2/leaderboard/sbLvl/0", json: true}),
@@ -33,16 +31,17 @@ export default new class EliteFivehundred extends FeatureBase {
                 request({url: "https://soopy.dev/api/v2/leaderboard/sbLvl/3", json: true}),
                 request({url: "https://soopy.dev/api/v2/leaderboard/sbLvl/4", json: true}),
             ]).then((response) => {
-                //this.topPlayers = []
                 response.forEach(actualResponse => {
                     Object.values(actualResponse.data).forEach(dataResponse => {
                         dataResponse.forEach(a => this.data.push(a.username))
                     })
                 })
             }).catch((error) => console.log(error))
-            //this.t = false            
-        }).setDelay(10), null, [
+
+            this.alreadyChecking = true
+        }).setFps(1), [
             register("chat", (level, typeOfChat, hypixelRank, username, ironman, playerMessage, event) => {
+                //ChatLib.chat(`${username}`)
                 // link check or soopy item thing check
                 this.onward = true
             
@@ -60,19 +59,14 @@ export default new class EliteFivehundred extends FeatureBase {
                 message = ChatLib.getChatMessage(event, true),
                 cancel(event)
 
-                //if (this.topPlayers.includes(this.playerData)) messagePrefix = message.slice(0, message.indexOf(":")) + ` &6★&r&f: `
-                messagePrefix = message.slice(0, message.indexOf(":")) + ` ${getColors(data.indexOf(username))}★&r&f: `
+                const rankOfPlayer = this.data.indexOf(username)+1
+                messagePrefix = message.slice(0, message.indexOf(":")) + ` ${getColors(rankOfPlayer)}✮${rankOfPlayer}&r&f :${message.split(":")[1]}`
             
                 newMessage.addTextComponent(messagePrefix)
-            
-                if (hypixelRank == "" && typeOfChat == "")
-                    playerMessage = "&7" + playerMessage.slice(0)
-                else
-                    playerMessage = "&f" + playerMessage.slice(0)
-            
-                newMessage.addTextComponent(playerMessage)
+        
                 ChatLib.chat(newMessage)
-            }).setCriteria(/^(\[\d+\] )?((?:(?:Guild|Party|Co-op) > )|(?:\[✌️\] ))?(\[\w+\+{0,2}\] )?(\w{1,16}) ?(♲)?(?: \[\w{1,6}\])?: (.*)$/g)
-        ], this.requiredWorld, true)         
+            }).setCriteria(/^(\[\d+\] )?((?:(?:Guild|Party|Co-op) > )|(?:\[:v:\] ))?(\[\w+\+{0,2}\] )?(\w{1,16}) ?(♲)?(?: \[\w{1,6}\])?: (.*)$/g),
+            register("worldUnload", () => this.data = [], this.alreadyChecking = false)
+        ], this.requiredWorld)         
     }
 }
